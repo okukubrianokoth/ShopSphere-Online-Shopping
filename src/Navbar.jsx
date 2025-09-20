@@ -19,7 +19,7 @@ export function Navbar({ currentPage, onNavigate, user, onLogout }) {
               className="text-3xl font-bold text-blue-500 cursor-pointer"
               onClick={() => onNavigate("home")}
             >
-              ShopSphere
+              ShopSphere  
             </h1>
 
             <div className="flex space-x-6">
@@ -38,7 +38,6 @@ export function Navbar({ currentPage, onNavigate, user, onLogout }) {
               ))}
             </div>
           </div>
-
           <div className="flex items-center space-x-4">
             {user ? (
               <>
