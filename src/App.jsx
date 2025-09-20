@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.jsx
+import React, { useState } from "react";
+import Navbar from "./Navbar.jsx";
+import Home from "./Home.jsx";
+import ProductCard from "./ProductCard.jsx"; // make sure this exists
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [user, setUser] = useState({ name: "Guest" });
+
+  const featuredProducts = [
+    { id: 1, name: "Wireless Headphones", price: 99 },
+    { id: 2, name: "Smart Watch", price: 149 },
+    { id: 3, name: "Gaming Mouse", price: 59 },
+    { id: 4, name: "Bluetooth Speaker", price: 79 },
+  ];
+
+  const handleAddToCart = (product) => {
+    console.log("Added to cart:", product);
+  };
+
+  const handleNavigate = (page) => {
+    console.log("Navigate to:", page);
+  };
+
+  const handleLogout = () => {
+    console.log("User logged out");
+    setUser(null);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      
+      <Navbar
+        currentPage="home"
+        onNavigate={handleNavigate}
+        user={user}
+        onLogout={handleLogout}
+      />
+      <Home featuredProducts={featuredProducts} onAddToCart={handleAddToCart} />
+    </div>
+  );
 }
 
-export default App
+export default App;

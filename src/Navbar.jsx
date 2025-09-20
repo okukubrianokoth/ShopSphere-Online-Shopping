@@ -1,7 +1,8 @@
 import React from "react";
 import { ShoppingCart, User, LogOut } from "lucide-react";
 
-export function Navbar({ currentPage, onNavigate, user, onLogout }) {
+
+ function Navbar({ currentPage, onNavigate, user, onLogout }) {
 
   const navItems = [
     { id: "home", label: "Home" },
@@ -71,3 +72,4 @@ export function Navbar({ currentPage, onNavigate, user, onLogout }) {
     </nav>
   );
 }
+export default Navbar;
