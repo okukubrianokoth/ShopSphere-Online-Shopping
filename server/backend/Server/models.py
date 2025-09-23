@@ -4,7 +4,7 @@ from sqlalchemy.orm import validates
 from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
-bcrypt = Bcrypt()
+bcrypt = Bcrypt() 
 
 class User(db.Model):
     __tablename__ = "users"
@@ -48,6 +48,7 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True, nullable=False)
+    total_products = db.Column(db.Integer, default=0)
 
     products = db.relationship("Product", back_populates="category")
 
@@ -58,7 +59,7 @@ class Category(db.Model):
         return name
 
     def __repr__(self):
-        return f"<Category {self.name}>"
+        return f"<Category {self.name} has {self.total_products} products.>"
 
 
 class Product(db.Model):
@@ -127,3 +128,34 @@ class OrderItem(db.Model):
 
     def __repr__(self):
         return f"<OrderItem Order {self.order_id} Product {self.product_id}>"
+    
+class CartItem(db.Model):
+    __tablename__ = "cart_items"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    quantity = db.Column(db.Integer, default=1)
+
+    user = db.relationship("User", back_populates="cart_items")
+    product = db.relationship("Product")
+
+    @validates("quantity")
+    def validate_quantity(self, key, quantity):
+        if quantity < 1:
+            raise ValueError("Cart item quantity must be at least 1")
+        return quantity
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "product_id": self.product_id,
+            "product_name": self.product.name if self.product else None,
+            "quantity": self.quantity,
+            "price_each": float(self.product.price) if self.product else None,
+            "total_price": float(self.product.price) * self.quantity if self.product else None
+        }
+    
+    def __repr__(self):
+        return f"<CartItem user:{self.user_id} product:{self.product_id} qty{self.quantity}>"
